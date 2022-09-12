@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" 
+    crossorigin="anonymous">
+</head>
+<body>
+    <div class="bg-image"
+    style="
+    background-image: url('./static/utils/Damn1k.png');
+    background-size: cover;
+    height: 100vh;">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 100vh;">
+    <header class="sticky-top opacity-75">
+        <ul class="nav d-flex justify-content-center 
+        border border-success border-3
+        py-2 bg-dark text-white">
+        <li class="nav-item px-3">
+            <a class="nav-link text-white" href="{% url 'index' %}">Home</a>
+          </li>
+        <li class="nav-item px-3">
+          <a class="nav-link text-success" href="{% url 'image_process' %}">Image Process</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link text-white" href="{% url 'video_process' %}">Video Process</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link text-white" href="{% url 'view' %}">View Style</a>
+        </li>
+        <li class="nav-item px-3">
+            <a class="nav-link text-white" href="{% url 'change_bg' %}">Change Background</a>
+        </li>
+        </ul>
+    </header>
+    {% if on %}
+    <div class="container my-4">
+        <div class="row">
+            <div class="col mx-2">
+                <div class="card
+                border border-success border-3 
+                bg-dark text-white">
+                    <img src="{{ filepath }}" class="card-img-top" alt="Target">
+                    <p class="bg-dark text-white text-center fw-bold mt-2">{{ name }}</p>
+                </div>
+            </div>
+            <div class="col mx-2" style="max-width: 15%;">
+                <form action="{% url 'image_process' %}" method="POST">
+            <div class="card bg-dark text-white">
+                    {% csrf_token %}
+                <button name="button" value="GreyScale" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Grey Scale</button>
+                <button name="button" value="Bright" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Bright</button>
+                <button name="button" value="Darker" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Darker</button>
+                <button name="button" value="Sharpen" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Sharpen</button>
+                <button name="button" value="Sepia" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Sepia</button>
+                <button name="button" value="HDR" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">HDR</button>
+                <button name="button" value="Inverted" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Inverted</button>
+                <button name="button" value="GreySketch" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Grey Sketch</button>
+                <button name="button" value="ColorSketch" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Color Sketch</button>
+                <button name="button" value="Stylize" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Stylize</button>
+                <button name="button" value="PencilSketch" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Pencil Sketch</button>
+                <button name="button" value="Summer" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Summer</button>
+                <button name="button" value="Winter" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Winter</button>
+                <button name="button" value="Gothic" type="submit"
+                        class="btn btn-dark text-white border border-success border-3">Gothic</button>
+            </div>
+                </form>
+            </div>
+            <div class="col mx-2">
+            <div class="card 
+            border border-success border-3 
+            bg-dark text-white">
+                {% if img_con %}
+                <img src="{{ conv_filepath }}" class="card-img-top" alt="Output">
+                <a href="{{ conv_filepath }}" download class="text-white"><p class="bg-dark text-white text-center fw-bold mt-2">Downlaod</p></a>
+                {% else %}
+                <img src="{{ filepath }}" class="card-img-top" alt="Output">
+                <a href="{{ filepath }}" class="text-white"><p class="bg-dark text-white text-center fw-bold mt-2">Downlaod</p></a>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not on %}
+    <form action="{% url 'image_process' %}" method="POST" enctype="multipart/form-data">
+        <div class="container mt-5">
+            <div class="card-body d-flex align-items-center">
+                <label for="{{form.files.id_for_label}}">File</label></br>
+                {{form.files}}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+    {% if on %}
+    <a href="{% url 'image_process' %}"><button class="btn btn-dark w-100 text-white">Go Back</button></a>
+    {% endif %}
+    </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" 
+    crossorigin="anonymous"></script>
+
+</body>
+</html>

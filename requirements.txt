@@ -1,0 +1,7 @@
+django
+opencv-python
+mediapipe
+numpy
+scipy
+glob2
+moviepy
